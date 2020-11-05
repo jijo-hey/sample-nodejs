@@ -1,0 +1,36 @@
+name: CI-CD
+
+on: 
+  push:
+    branches:    
+      - master 
+
+jobs:
+  build:
+
+    runs-on: CentOS Linux 7
+
+        strategy:
+          matrix:
+            node-version: [10.x, 8.x]
+    
+    steps:
+    - uses: actions/checkout@v1
+    - uses: Todolist/ssh-agent@v0.4.1
+              with:
+                  ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: npm install
+      run: |
+        npm install
+
+      env:
+        CI: true
+      
+    - name: pm2 start
+      run: |
+        pm2 start app.js  --if-present
