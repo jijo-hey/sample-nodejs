@@ -8,7 +8,7 @@ on:
 jobs:
   build:
 
-    runs-on: CentOS Linux 7
+    runs-on: [self-hosted, linux, x86]
 
     strategy:
      matrix:
